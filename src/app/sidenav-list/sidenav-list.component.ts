@@ -4,13 +4,13 @@ import { AuthService } from '../auth/auth.service';
 import { LoginComponent } from '../login/login.component';
 
 @Component({
-  selector: 'app-header',
-  templateUrl: './header.component.html',
-  styleUrls: ['./header.component.css']
+  selector: 'app-sidenav-list',
+  templateUrl: './sidenav-list.component.html',
+  styleUrls: ['./sidenav-list.component.css']
 })
-export class HeaderComponent implements OnInit {
+export class SidenavListComponent implements OnInit {
 
-  @Output() public sidenavToggle = new EventEmitter();
+  @Output() sidenavClose = new EventEmitter();
   @Output() public logoutEvent = new EventEmitter();
 
   constructor(private loginDialog: MatDialog, private authService: AuthService) { }
@@ -23,8 +23,9 @@ export class HeaderComponent implements OnInit {
       disableClose: true
     });
   }
-  onToggleSidenav() {
-    this.sidenavToggle.emit();
+
+  onSidenavClose(){
+    this.sidenavClose.emit();
   }
 
   isLoggedIn(){

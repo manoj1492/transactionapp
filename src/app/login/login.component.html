@@ -12,9 +12,13 @@
       <div class="row">
         <mat-form-field>
           <mat-label>Password</mat-label>
-          <input type = "password" matInput [formControl] = "loginFormControl.password">
+          <input [type] = "showPassword? 'text': 'password'" matInput [formControl] = "loginFormControl.password">
+          <mat-icon matSuffix (click)="togglePasswordVisibility()">visibility</mat-icon>
           <mat-error *ngIf="loginFormControl.password.invalid">Password invalid</mat-error>
         </mat-form-field>
+      </div>
+      <div class="row">
+        <mat-error *ngIf="error">{{error}}</mat-error>
       </div>
     </div> 
 </mat-dialog-content>

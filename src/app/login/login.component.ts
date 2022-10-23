@@ -3,6 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { AuthService } from '../auth/auth.service';
+import { LoginModel } from './LoginModel';
 
 @Component({
   selector: 'app-login',
@@ -10,6 +11,9 @@ import { AuthService } from '../auth/auth.service';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
+
+  error: string;
+  showPassword: boolean = false;
 
   constructor(private authService: AuthService, private loginDialogRef: MatDialogRef<LoginComponent>, private router: Router) { }
   loginForm: FormGroup = new FormGroup({
@@ -26,15 +30,23 @@ export class LoginComponent implements OnInit {
 
   login(){
     console.log('Login');
-    this.authService.login(this.loginForm.getRawValue()).subscribe(response => {
-      if(response != null){
-        this.authService.setSession(response);
-          this.router.navigate(['home']);
-          this.loginDialogRef.close();
+    const loginModel: LoginModel = this.loginForm.getRawValue();
+    this.authService.login(loginModel)
+    .subscribe(next => {
+      if(next != null && next.data === "Login Successful"){
+        const basicToken = 'Basic ' + btoa(loginModel.email+ ":" + loginModel.password);
+        this.authService.setSession(basicToken);
+        this.error = null;
+        this.router.navigate(['home']);
+        this.loginDialogRef.close();
       }
-    },error => {
-
+    },errorResponse => {
+        this.error = errorResponse.error;
     });
+  }
+
+  togglePasswordVisibility() {
+    this.showPassword = !this.showPassword;
   }
 
 }

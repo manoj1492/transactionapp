@@ -1,7 +1,16 @@
-<mat-toolbar>
-    <button mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon">
-      <mat-icon>menu</mat-icon>
-    </button>
-    <span>My App</span>
-    <div class="loginbutton"><a (click) = "openLoginForm()">Login</a></div>
+<mat-toolbar color="primary">
+    <div fxFlex fxLayout>
+        <div fxHide.gt-sm>  
+            <button mat-icon-button (click) = "onToggleSidenav()">
+                <mat-icon>menu</mat-icon>
+            </button>
+        </div>  
+        <div>Transaction App</div>
+        <div *ngIf = "!isLoggedIn()" fxFlex fxLayoutAlign="flex-end center" fxHide.sm>
+            <a mat-button (click) = "openLoginForm()">Login</a>
+        </div>
+        <div *ngIf = "isLoggedIn()" fxFlex fxLayoutAlign="flex-end center" fxHide.sm>
+            <a mat-button (click) = "logout()" >Logout</a>
+        </div>
+    </div>
 </mat-toolbar>

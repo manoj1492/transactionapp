@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import * as moment from 'moment';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { LoginModel } from '../login/LoginModel';
 import { environment } from 'src/environments/environment';
 
@@ -12,25 +11,31 @@ export class AuthService {
   constructor(private http: HttpClient) { }
 
   login(loginModel: LoginModel){
-    return this.http.post<any>(environment.appBaseUrl + "login", loginModel);
+    const headers = new HttpHeaders({
+      Authorization: 'Basic ' + btoa(loginModel.email+":"+loginModel.password),
+    });
+    return this.http.get<any>(environment.appBaseUrl, {
+      headers
+    });
   }
 
   setSession(authResult: any) {
-    localStorage.setItem('id_token', authResult.idToken);
+    localStorage.setItem('token', authResult);
   }
   
   isLoggedIn() {
-    if (!this.getExpiration()) {
-      return false;
+    if (localStorage.getItem('token')) {
+      return true;
     }
-    return moment().isBefore(this.getExpiration());
+    return false;
   }
-  getExpiration() {
-    const expiration = localStorage.getItem('expires_at');
-    if (!expiration) {
-      return null;
-    }
-    const expiresAt = JSON.parse(expiration);
-    return moment(expiresAt);
+
+  getToken() {
+    return localStorage.getItem('token');
   }
+
+  logout() {
+    localStorage.clear();
+  }
+
 }

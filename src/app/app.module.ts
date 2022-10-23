@@ -12,11 +12,16 @@ import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatIconModule} from '@angular/material/icon';
 import {ReactiveFormsModule} from '@angular/forms';
 import {MatFormFieldModule} from '@angular/material/form-field';
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatListModule } from '@angular/material/list';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { HeaderComponent } from './header/header.component';
 import { FooterComponent } from './footer/footer.component';
+import { SidenavListComponent } from './sidenav-list/sidenav-list.component';
+import { TokenInterceptor } from './auth/TokenInterceptor';
 
 @NgModule({
   declarations: [
@@ -24,7 +29,8 @@ import { FooterComponent } from './footer/footer.component';
     LoginComponent,
     HomeComponent,
     HeaderComponent,
-    FooterComponent
+    FooterComponent,
+    SidenavListComponent
   ],
   imports: [
     BrowserModule,
@@ -36,6 +42,9 @@ import { FooterComponent } from './footer/footer.component';
     MatToolbarModule,
     MatIconModule,
     MatInputModule,
+    MatSidenavModule,
+    MatListModule,
+    FlexLayoutModule,
     ReactiveFormsModule,
     HttpClientModule
   ],
@@ -46,6 +55,12 @@ import { FooterComponent } from './footer/footer.component';
     {
       provide: MatDialogRef,
       useValue: {}
+    },
+    ,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: TokenInterceptor,
+      multi: true
     }
   ],
   bootstrap: [AppComponent]
